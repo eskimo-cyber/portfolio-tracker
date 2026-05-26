@@ -56,7 +56,6 @@ app.delete('/api/assets/:id', auth, (req, res) => {
 // Prix automatiques
 app.post('/api/refresh-prices', auth, async (req, res) => {
   try {
-    const fetch = (await import('node-fetch')).default;
     const db = readDB();
     const updated = [];
 
