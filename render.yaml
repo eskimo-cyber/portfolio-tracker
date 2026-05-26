@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: portfolio-tracker
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: starter
+    disk:
+      name: portfolio-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: ACCESS_CODE
+        value: monportfolio2024
+      - key: DATA_DIR
+        value: /data
+      - key: NODE_ENV
+        value: production

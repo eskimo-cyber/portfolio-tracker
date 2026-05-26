@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Patrimoine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f7f4;--surface:#ffffff;--surface2:#f2f0eb;--surface3:#e8e5df;
+  --border:#e5e2dc;--border2:#d4d0c8;
+  --text:#1a1916;--t2:#706d65;--t3:#a8a49c;--t4:#d4d0c8;
+  --green:#16a34a;--gbg:#dcfce7;--gtext:#15803d;
+  --red:#dc2626;--rbg:#fee2e2;--rtext:#b91c1c;
+  --blue:#2563eb;--bbg:#dbeafe;
+  --amber:#d97706;--ambg:#fef3c7;
+  --purple:#7c3aed;--pbg:#ede9fe;
+  --r:10px;--rl:14px;--rxl:18px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;-webkit-font-smoothing:antialiased}
+
+/* ── LOGIN ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;background:linear-gradient(135deg,#f8f7f4 0%,#ede9e0 100%)}
+.lcard{background:var(--surface);border-radius:var(--rxl);padding:2.5rem;width:400px;box-shadow:var(--shadow-lg);text-align:center}
+.llogo{width:60px;height:60px;background:var(--text);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;color:#fff;font-size:26px;box-shadow:var(--shadow-md)}
+.lcard h1{font-size:24px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px}
+.lcard p{font-size:14px;color:var(--t2);margin-bottom:2rem;line-height:1.6}
+.lcard input{width:100%;padding:13px 16px;font-size:16px;border:2px solid var(--border);border-radius:var(--r);font-family:'Inter',monospace;background:var(--surface);color:var(--text);margin-bottom:12px;text-align:center;letter-spacing:.15em;transition:border-color .2s}
+.lcard input:focus{outline:none;border-color:var(--text)}
+.lerr{font-size:12px;color:var(--red);margin-bottom:12px;display:none}
+
+/* ── APP ── */
+#app{display:none}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.tbl{display:flex;align-items:center;gap:10px}
+.tlogo{width:32px;height:32px;background:var(--text);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px}
+.topbar h1{font-size:15px;font-weight:600;letter-spacing:-.2px}
+.tbr{display:flex;align-items:center;gap:8px}
+.sync-badge{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--gbg);color:var(--gtext);display:flex;align-items:center;gap:4px;font-weight:500}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+.tmi-ctl{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2);padding:5px 10px;border:1px solid var(--border2);border-radius:20px;cursor:pointer;background:var(--surface);font-weight:500}
+.tmi-ctl input{margin:0;cursor:pointer;accent-color:var(--text)}
+
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:calc(100vh - 56px)}
+.sidebar{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+.main{flex:1;padding:1.5rem;min-width:0;max-width:1200px}
+
+/* ── SIDEBAR ── */
+.snav-section{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);padding:12px 16px 4px;margin-top:4px}
+.snav-item{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:13px;color:var(--t2);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:inherit;transition:all .15s;border-radius:0;font-weight:400}
+.snav-item:hover{background:var(--bg);color:var(--text)}
+.snav-item.active{background:var(--bg);color:var(--text);font-weight:600}
+.snav-item i{font-size:16px;flex-shrink:0;opacity:.7}
+.snav-item.active i{opacity:1}
+.snav-add{color:var(--green) !important;font-weight:500 !important}
+.snav-add i{color:var(--green) !important;opacity:1 !important}
+
+/* ── METRICS ── */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:1.5rem}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem 1.25rem;box-shadow:var(--shadow)}
+.mlbl{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:500}
+.mval{font-size:20px;font-weight:700;line-height:1;letter-spacing:-.3px}
+.msub{font-size:11px;color:var(--t3);margin-top:4px}
+.msub2{font-size:12px;font-weight:500;margin-top:3px}
+.pos{color:var(--green)}.neg{color:var(--red)}
+
+/* ── PAGE ── */
+.section{display:none}.section.active{display:block}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.page-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
+
+/* ── ASSET CARDS ── */
+.assets-list{display:flex;flex-direction:column;gap:10px}
+.asset-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;box-shadow:var(--shadow);transition:box-shadow .2s,border-color .2s;cursor:default}
+.asset-card:hover{box-shadow:var(--shadow-md);border-color:var(--border2)}
+.asset-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.asset-info{flex:1;min-width:0}
+.asset-name{font-size:14px;font-weight:600;letter-spacing:-.1px}
+.asset-meta{font-size:12px;color:var(--t2);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.asset-meta-badge{font-size:10px;padding:1px 6px;border-radius:10px;font-weight:500}
+.asset-values{display:flex;gap:1.5rem;align-items:center;flex-shrink:0}
+.asset-val-group{text-align:right}
+.asset-val{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.asset-val-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;margin-top:1px}
+.asset-gain{font-size:12px;font-weight:600;padding:2px 8px;border-radius:20px}
+.asset-gain.pos{background:var(--gbg);color:var(--gtext)}
+.asset-gain.neg{background:var(--rbg);color:var(--rtext)}
+.asset-actions{display:flex;gap:4px;flex-shrink:0}
+.asset-rdt{text-align:right}
+.asset-rdt-brut{font-size:13px;font-weight:600}
+.asset-rdt-net{font-size:11px;color:var(--t2);margin-top:1px}
+.alert-strip{background:var(--ambg);border:1px solid #fde68a;border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--amber);display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:500}
+.ceil-strip{background:var(--rbg);border:1px solid #fca5a5;border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--red);display:flex;align-items:center;gap:6px;margin-bottom:10px;font-weight:500}
+.livret-bar{height:4px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden;width:80px}
+.lb-fill{height:100%;border-radius:2px;background:var(--green)}
+.lb-fill.near{background:var(--amber)}.lb-fill.full{background:var(--red)}
+.empty-section{background:var(--surface);border:2px dashed var(--border);border-radius:var(--rl);padding:2.5rem;text-align:center;color:var(--t3)}
+.empty-section i{font-size:32px;display:block;margin-bottom:10px;opacity:.5}
+.empty-section p{font-size:13px;margin-bottom:1rem}
+.optim-badge{font-size:11px;background:var(--ambg);color:var(--amber);padding:2px 8px;border-radius:20px;font-weight:500;display:inline-flex;align-items:center;gap:3px}
+
+/* ── SUMMARY CARD ── */
+.summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1.5rem;box-shadow:var(--shadow)}
+.sc-item{text-align:center;flex:1}
+.sc-val{font-size:16px;font-weight:700}
+.sc-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+
+/* ── REVENUS ── */
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.rev-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem 1.25rem;box-shadow:var(--shadow)}
+.rev-lbl{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;font-weight:500}
+.rev-val{font-size:20px;font-weight:700;letter-spacing:-.3px}
+.rev-sub{font-size:12px;color:var(--t2);margin-top:3px}
+
+/* ── PROJECTIONS ── */
+.proj-ctrl{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1.25rem;display:flex;gap:2rem;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)}
+.proj-ctrl label{font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px;font-weight:500}
+.proj-ctrl input[type=range]{width:120px;accent-color:var(--text)}
+.pv{font-size:14px;font-weight:600;min-width:55px}
+.hcards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.25rem}
+.hcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem;text-align:center;box-shadow:var(--shadow)}
+.hy{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:500}
+.hv{font-size:19px;font-weight:700;letter-spacing:-.3px}
+.hg{font-size:12px;font-weight:600;margin-top:3px}
+.hb{font-size:11px;color:var(--t3);margin-top:2px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;box-shadow:var(--shadow)}
+.chart-wrap{position:relative;width:100%;height:280px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--t2);margin-bottom:1rem;font-weight:500}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0}
+
+/* ── ALLOC ── */
+.alloc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.alloc-donut{height:260px}
+.alloc-list{display:flex;flex-direction:column;gap:6px;justify-content:center}
+.alloc-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:var(--r)}
+.alloc-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.alloc-name{font-size:13px;font-weight:500;flex:1}
+.alloc-pct{font-size:13px;font-weight:700}
+.alloc-val{font-size:12px;color:var(--t2)}
+
+/* ── REAL ESTATE ── */
+.re-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;margin-bottom:12px;box-shadow:var(--shadow)}
+.re-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+.re-name{font-size:15px;font-weight:700}
+.re-status{font-size:11px;padding:2px 8px;border-radius:20px;display:inline-block;font-weight:500;margin-top:4px}
+.re-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.re-kpi{background:var(--bg);border-radius:var(--r);padding:.75rem 1rem}
+.re-kpi-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;font-weight:500}
+.re-kpi-val{font-size:16px;font-weight:700}
+
+/* ── BUTTONS ── */
+.btn{font-size:13px;padding:8px 14px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);cursor:pointer;color:var(--text);display:inline-flex;align-items:center;gap:5px;transition:all .15s;font-family:inherit;white-space:nowrap;font-weight:500;box-shadow:var(--shadow)}
+.btn:hover{background:var(--surface2);border-color:var(--border2)}
+.btn.primary{background:var(--text);color:#fff;border-color:var(--text);box-shadow:var(--shadow-md)}
+.btn.primary:hover{opacity:.88}
+.btn.sm{padding:5px 10px;font-size:12px;box-shadow:none}
+.btn.ghost{border-color:transparent;background:none;box-shadow:none}
+.btn.ghost:hover{background:var(--surface2)}
+.btn.danger{color:var(--red)}
+.btn.green{background:var(--gbg);color:var(--gtext);border-color:#86efac}
+.btn.green:hover{background:#bbf7d0}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center;padding:1.5rem;backdrop-filter:blur(4px)}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--rxl);padding:1.75rem;width:500px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);animation:slideUp .2s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.modal-title{font-size:17px;font-weight:700;letter-spacing:-.2px}
+.modal-close{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:none;background:var(--surface2);cursor:pointer;color:var(--t2);font-size:16px;transition:background .15s}
+.modal-close:hover{background:var(--surface3)}
+.field{margin-bottom:14px}
+.field label{font-size:11px;color:var(--t2);display:block;margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select{width:100%;padding:10px 12px;font-size:14px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);font-family:inherit;transition:border-color .15s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--text)}
+.field input[readonly]{background:var(--bg);color:var(--t2)}
+.hint{font-size:11px;color:var(--t3);margin-top:4px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.msec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.mfooter{display:flex;gap:8px;justify-content:flex-end;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)}
+.cf{display:none}.cf.on{display:block}
+.info-box{background:var(--bbg);border-radius:var(--r);padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:14px;display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+
+/* ── TYPE SELECTOR ── */
+.type-sel{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.type-opt{padding:10px 12px;border:2px solid var(--border);border-radius:var(--r);cursor:pointer;font-size:13px;font-family:inherit;background:var(--surface);color:var(--t2);transition:all .15s;text-align:center;font-weight:500}
+.type-opt:hover{border-color:var(--border2);background:var(--bg)}
+.type-opt.active{border-color:var(--text);background:var(--text);color:#fff}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--text);color:#fff;padding:10px 16px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1;transform:translateY(0)}
+
+@media(max-width:1024px){.metrics{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.sidebar{display:none}.metrics{grid-template-columns:repeat(2,1fr)}.hcards{grid-template-columns:repeat(2,1fr)}.alloc-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.metrics{grid-template-columns:1fr 1fr}.rev-grid{grid-template-columns:1fr}.asset-values{display:none}.re-kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="lcard">
+    <div class="llogo"><i class="ti ti-chart-pie-2"></i></div>
+    <h1>Mon Patrimoine</h1>
+    <p>Votre tableau de bord financier partagé.<br>Entrez votre code d'accès pour continuer.</p>
+    <input type="password" id="codeInput" placeholder="••••••••••••" autocomplete="off">
+    <div class="lerr" id="loginError">Code incorrect, réessayez.</div>
+    <button class="btn primary" style="width:100%;justify-content:center;padding:12px;font-size:14px" onclick="login()">
+      <i class="ti ti-login"></i> Accéder
+    </button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="tbl">
+      <div class="tlogo"><i class="ti ti-chart-pie-2"></i></div>
+      <h1>Mon Patrimoine</h1>
+    </div>
+    <div class="tbr">
+      <label class="tmi-ctl">
+        <input type="checkbox" id="tmiToggle" onchange="onTmiChange()">
+        <span id="tmiLabel">TMI 11%</span>
+      </label>
+      <div class="sync-badge"><span class="sync-dot"></span><span id="syncTxt">Synchronisé</span></div>
+      <button class="btn sm green" onclick="refreshPrices()" title="Actualiser les cours"><i class="ti ti-refresh"></i> Actualiser</button>
+      <button class="btn sm ghost" onclick="exportData()" title="Exporter"><i class="ti ti-download"></i></button>
+      <button class="btn sm ghost" onclick="logout()"><i class="ti ti-logout"></i></button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <div class="snav-section">Vue globale</div>
+      <button class="snav-item active" onclick="showSec('dashboard')"><i class="ti ti-dashboard"></i>Tableau de bord</button>
+      <button class="snav-item" onclick="showSec('projections')"><i class="ti ti-trending-up"></i>Projections</button>
+      <button class="snav-item" onclick="showSec('repartition')"><i class="ti ti-chart-donut"></i>Répartition</button>
+
+      <div class="snav-section">Placements financiers</div>
+      <button class="snav-item" onclick="showSec('pea')"><i class="ti ti-building-bank"></i>PEA</button>
+      <button class="snav-item" onclick="showSec('av')"><i class="ti ti-shield-check"></i>Assurance-vie</button>
+      <button class="snav-item" onclick="showSec('per')"><i class="ti ti-hourglass"></i>PER</button>
+      <button class="snav-item" onclick="showSec('pee')"><i class="ti ti-briefcase"></i>PEE</button>
+
+      <div class="snav-section">Épargne</div>
+      <button class="snav-item" onclick="showSec('livrets')"><i class="ti ti-piggy-bank"></i>Livrets & Épargne</button>
+
+      <div class="snav-section">Immobilier</div>
+      <button class="snav-item" onclick="showSec('scpi')"><i class="ti ti-home-2"></i>SCPI</button>
+      <button class="snav-item" onclick="showSec('locatif')"><i class="ti ti-home-dollar"></i>Projets locatifs</button>
+
+      <div class="snav-section">Crypto</div>
+      <button class="snav-item snav-add" onclick="openModal('crypto')"><i class="ti ti-currency-bitcoin"></i>Crypto</button>
+    </nav>
+
+    <main class="main">
+      <!-- METRICS -->
+      <div class="metrics" id="metricsBar">
+        <div class="metric"><div class="mlbl">Patrimoine total</div><div class="mval" id="mPat">—</div></div>
+        <div class="metric"><div class="mlbl">Gain total</div><div class="mval" id="mGain">—</div><div class="msub2" id="mGainPct">—</div></div>
+        <div class="metric"><div class="mlbl">Versements / mois</div><div class="mval" id="mContrib">—</div><div class="msub">abondement : <span id="mAbond" class="pos">—</span></div></div>
+        <div class="metric"><div class="mlbl">Revenus nets / mois</div><div class="mval pos" id="mRev">—</div><div class="msub">loyers SCPI</div></div>
+        <div class="metric"><div class="mlbl">Rendement net moy.</div><div class="mval" id="mRdtNet">—</div><div class="msub" id="mRdtBrut">— brut</div></div>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div class="section active" id="section-dashboard">
+        <div class="page-hdr"><div class="page-title">Vue d'ensemble</div></div>
+        <div id="dashContent"></div>
+      </div>
+
+      <!-- SECTIONS PAR TYPE -->
+      <div class="section" id="section-pea">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-building-bank" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>PEA</div>
+          <button class="btn primary" onclick="openModal('pea')"><i class="ti ti-plus"></i> Ajouter</button>
+        </div>
+        <div id="list-pea"></div>
+      </div>
+
+      <div class="section" id="section-av">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-shield-check" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>Assurance-vie</div>
+          <button class="btn primary" onclick="openModal('av')"><i class="ti ti-plus"></i> Ajouter</button>
+        </div>
+        <div id="list-av"></div>
+      </div>
+
+      <div class="section" id="section-per">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-hourglass" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>PER</div>
+          <button class="btn primary" onclick="openModal('per')"><i class="ti ti-plus"></i> Ajouter</button>
+        </div>
+        <div id="list-per"></div>
+      </div>
+
+      <div class="section" id="section-pee">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-briefcase" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>PEE</div>
+          <button class="btn primary" onclick="openModal('pee')"><i class="ti ti-plus"></i> Ajouter</button>
+        </div>
+        <div id="list-pee"></div>
+      </div>
+
+      <div class="section" id="section-livrets">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-piggy-bank" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>Livrets & Épargne</div>
+          <button class="btn primary" onclick="openModal('livret')"><i class="ti ti-plus"></i> Ajouter</button>
+        </div>
+        <div id="list-livrets"></div>
+      </div>
+
+      <div class="section" id="section-scpi">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-home-2" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>SCPI</div>
+          <button class="btn primary" onclick="openModal('scpi')"><i class="ti ti-plus"></i> Ajouter</button>
+        </div>
+        <div id="list-scpi"></div>
+        <div id="revenusScpi" style="margin-top:1.5rem;display:none"></div>
+      </div>
+
+      <div class="section" id="section-locatif">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-home-dollar" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>Projets locatifs</div>
+          <button class="btn primary" onclick="openReModal()"><i class="ti ti-plus"></i> Nouveau scénario</button>
+        </div>
+        <div id="list-locatif"></div>
+      </div>
+
+      <div class="section" id="section-crypto">
+        <div class="page-hdr">
+          <div class="page-title"><i class="ti ti-currency-bitcoin" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>Crypto</div>
+          <button class="btn primary" onclick="openModal('crypto')"><i class="ti ti-plus"></i> Ajouter</button>
+        </div>
+        <div id="list-crypto"></div>
+      </div>
+
+      <!-- PROJECTIONS -->
+      <div class="section" id="section-projections">
+        <div class="page-hdr"><div class="page-title">Projections</div></div>
+        <div class="proj-ctrl">
+          <label><i class="ti ti-calendar" style="font-size:15px"></i> Horizon
+            <input type="range" min="1" max="30" value="10" id="horizonSlider" step="1" oninput="updateProj()">
+            <span class="pv" id="horizonVal">10 ans</span>
+          </label>
+          <span style="font-size:12px;color:var(--t2)">Apports mensuels définis par support</span>
+        </div>
+        <div class="hcards" id="hCards"></div>
+        <div class="chart-card">
+          <div class="legend" id="projLegend"></div>
+          <div class="chart-wrap"><canvas id="projChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- REPARTITION -->
+      <div class="section" id="section-repartition">
+        <div class="page-hdr"><div class="page-title">Répartition</div></div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;box-shadow:var(--shadow)">
+          <div class="alloc-grid">
+            <div class="alloc-donut"><canvas id="allocChart"></canvas></div>
+            <div class="alloc-list" id="allocList"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL AJOUT/MODIFICATION SUPPORT
+══════════════════════════════════════════ -->
+<div class="overlay" id="ovAsset">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="assetModalTitle">Ajouter un support</div>
+      <button class="modal-close" onclick="closeOv('ovAsset')"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="fr">
+      <div class="field"><label>Nom</label><input id="aN" placeholder="ex: CW8, Iroko Atlas, Livret A…"></div>
+      <div class="field"><label>Établissement</label><input id="aPlatform" placeholder="Boursobank, Louve…" list="etabList">
+        <datalist id="etabList"><option value="Boursobank"><option value="Linxea"><option value="Fortuneo"><option value="Trade Republic"><option value="Bourse Direct"><option value="Degiro"><option value="Louve Invest"><option value="Yomoni"><option value="Nalo"><option value="BNP Paribas"><option value="Crédit Agricole"><option value="Coinbase"><option value="Binance"></datalist>
+      </div>
+    </div>
+
+    <!-- Date ouverture (placements financiers) -->
+    <div class="cf field" id="cf-opened">
+      <label>Date d'ouverture du contrat</label>
+      <input id="aOpened" type="date">
+      <div class="hint">Calcul automatique de l'optimisation fiscale (AV 8 ans, PEA/PEE 5 ans)</div>
+    </div>
+
+    <!-- Sous-type livret -->
+    <div class="cf" id="cf-livret-sub">
+      <div class="field"><label>Type de livret</label>
+        <select id="aLivretType" onchange="onLivretChange()">
+          <option value="livret_a">Livret A — 1.5%</option>
+          <option value="ldds">LDDS — 1.5%</option>
+          <option value="csl">Compte sur livret — 2.4%</option>
+          <option value="livret_bancaire">Livret bancaire — 1.5%</option>
+          <option value="lep">LEP</option>
+          <option value="epargne">Épargne disponible</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ETF/auto : ticker -->
+    <div class="cf" id="cf-ticker">
+      <div class="info-box"><i class="ti ti-info-circle" style="flex-shrink:0;font-size:15px"></i>Le cours sera mis à jour automatiquement via Yahoo Finance (ETF) ou CoinGecko (crypto).</div>
+      <div class="fr">
+        <div class="field"><label>Ticker</label><input id="aTicker" placeholder="CW8.PA ou bitcoin"></div>
+        <div class="field"><label>Nombre de parts / unités</label><input id="aUnits" type="number" step="0.0001" placeholder="10.5" oninput="calcAutoVal()"></div>
+      </div>
+      <div class="field"><label>Prix unitaire actuel (€)</label><input id="aUnitPrice" type="number" step="0.01" placeholder="385.50" oninput="calcAutoVal()"></div>
+    </div>
+
+    <!-- SCPI spécifique -->
+    <div class="cf" id="cf-scpi-fields">
+      <div class="fr3">
+        <div class="field"><label>Nombre de parts</label><input id="aScpiParts" type="number" placeholder="50" oninput="calcScpiVal()"></div>
+        <div class="field"><label>Prix de la part (€)</label><input id="aScpiPrice" type="number" step="0.01" placeholder="200" oninput="calcScpiVal()"></div>
+        <div class="field"><label>TOF (%)</label><input id="aScpiTof" type="number" step="0.1" value="95"></div>
+      </div>
+      <div class="field"><label>Loyer brut annuel estimé (€)</label><input id="aScpiLoyer" type="number" placeholder="800"></div>
+      <div class="field"><label>Mode SCPI</label>
+        <select id="aScpiMode">
+          <option value="direct">En direct — loyers versés sur compte</option>
+          <option value="av">Via assurance-vie — capitalisation</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Valorisation -->
+    <div class="msec">Valorisation</div>
+
+    <!-- Valeur calculée auto (ETF/SCPI) -->
+    <div class="cf field" id="cf-val-auto">
+      <label>Valeur actuelle (€) <span style="font-size:10px;background:var(--gbg);color:var(--gtext);padding:1px 6px;border-radius:10px;font-weight:600">calculée</span></label>
+      <input id="aValAuto" type="number" readonly>
+    </div>
+
+    <!-- Valeur manuelle (fonds, PER, PEE, AV fonds euros) -->
+    <div class="cf" id="cf-val-manual">
+      <div class="fr">
+        <div class="field"><label>Montant investi (€)</label><input id="aInvested" type="number" placeholder="5000"></div>
+        <div class="field"><label>Valeur actuelle (€)</label><input id="aValue" type="number" placeholder="5200"><div class="hint">Vide = même que investi</div></div>
+      </div>
+    </div>
+
+    <!-- Solde livret -->
+    <div class="cf field" id="cf-val-livret">
+      <label>Solde actuel (€)</label>
+      <input id="aSolde" type="number" placeholder="12 000">
+      <div class="hint">Les intérêts journaliers sont calculés automatiquement depuis aujourd'hui</div>
+    </div>
+
+    <!-- Taux -->
+    <div class="cf field" id="cf-rate">
+      <label>Taux brut annuel (%)</label>
+      <input id="aRate" type="number" step="0.1" placeholder="3.5">
+    </div>
+
+    <!-- Versements -->
+    <div class="msec">Versements programmés</div>
+    <div class="field"><label>Apport mensuel personnel (€)</label><input id="aContrib" type="number" step="10" placeholder="0"><div class="hint">0 si pas de versement régulier</div></div>
+    <div class="cf field" id="cf-abond">
+      <label>Abondement employeur mensuel (€)</label>
+      <input id="aAbond" type="number" step="10" placeholder="0">
+    </div>
+
+    <div class="mfooter">
+      <button class="btn" onclick="closeOv('ovAsset')">Annuler</button>
+      <button class="btn primary" onclick="saveAsset()"><i class="ti ti-check"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LOCATIF -->
+<div class="overlay" id="ovRe">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="reMTitle">Nouveau scénario locatif</div>
+      <button class="modal-close" onclick="closeOv('ovRe')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Nom du projet</label><input id="reName" placeholder="Appart T2 Lyon"></div>
+      <div class="field"><label>Statut</label><select id="reStatus"><option value="draft">En réflexion</option><option value="active">Actif</option></select></div>
+    </div>
+    <div class="msec">Acquisition</div>
+    <div class="fr3">
+      <div class="field"><label>Prix d'achat (€)</label><input id="rePurchase" type="number"></div>
+      <div class="field"><label>Frais notaire (€)</label><input id="reNotary" type="number"></div>
+      <div class="field"><label>Travaux (€)</label><input id="reWorks" type="number"></div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Ameublement (€)</label><input id="reFurniture" type="number"></div>
+      <div class="field"><label>Vacance locative (%)</label><input id="reVacancy" type="number" value="5"></div>
+    </div>
+    <div class="msec">Financement</div>
+    <div class="fr3">
+      <div class="field"><label>Montant emprunté (€)</label><input id="reLoan" type="number"></div>
+      <div class="field"><label>Taux crédit (%)</label><input id="reLoanRate" type="number" step="0.01"></div>
+      <div class="field"><label>Durée (ans)</label><input id="reLoanYears" type="number" value="20"></div>
+    </div>
+    <div class="msec">Revenus & charges</div>
+    <div class="fr3">
+      <div class="field"><label>Loyer mensuel (€)</label><input id="reRent" type="number"></div>
+      <div class="field"><label>Charges locataire (€)</label><input id="reTenantC" type="number"></div>
+      <div class="field"><label>Charges propriétaire (€)</label><input id="reOwnerC" type="number"></div>
+    </div>
+    <div class="fr3">
+      <div class="field"><label>Taxe foncière/an (€)</label><input id="reTax" type="number"></div>
+      <div class="field"><label>Assurance/an (€)</label><input id="reInsurance" type="number"></div>
+      <div class="field"><label>Frais gestion (%)</label><input id="reGestion" type="number" step="0.1"></div>
+    </div>
+    <div class="mfooter">
+      <button class="btn" onclick="closeOv('ovRe')">Annuler</button>
+      <button class="btn primary" onclick="saveRe()"><i class="ti ti-check"></i> Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ══════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════
+const LIVRET_RATES = { livret_a:1.5, ldds:1.5, csl:2.4, livret_bancaire:1.5, lep:3.5, epargne:0 };
+const LIVRET_CEIL  = { livret_a:22950, ldds:12000, csl:0, livret_bancaire:0, lep:10000, epargne:0 };
+const LIVRET_LBL   = { livret_a:'Livret A', ldds:'LDDS', csl:'Compte sur livret', livret_bancaire:'Livret bancaire', lep:'LEP', epargne:'Épargne dispo' };
+const TYPE_COLORS  = { pea:'#2563eb', av:'#16a34a', per:'#7c3aed', pee:'#ea580c', scpi:'#ca8a04', livret:'#0891b2', crypto:'#db2777', locatif:'#65a30d' };
+const TYPE_ICONS   = { pea:'ti-building-bank', av:'ti-shield-check', per:'ti-hourglass', pee:'ti-briefcase', scpi:'ti-home-2', livret:'ti-piggy-bank', crypto:'ti-currency-bitcoin', locatif:'ti-home-dollar' };
+const ALERT_MONTHS = { pea:0, av:12, per:3, pee:1, scpi:6, livret:0, crypto:0 };
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let AC='', assets=[], realEstate=[], useTMI=true;
+let editAssetId=null, curModalType='pea';
+let projChart=null, allocChart=null;
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+const fmt = n => new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n||0);
+const fmtP = n => (n>=0?'+':'')+n.toFixed(2)+'%';
+const yrsOpen = d => d?(Date.now()-new Date(d).getTime())/(365.25*24*3600*1000):0;
+const daysSince = d => d?(Date.now()-new Date(d).getTime())/(24*3600*1000):999;
+
+function livretVal(a){
+  if(!a.rate_manual||!a.livret_deposit_date) return a.current_value||0;
+  const days = daysSince(a.livret_deposit_date);
+  return Math.round((a.current_value||0)*Math.pow(1+a.rate_manual/100/365,days)*100)/100;
+}
+
+function getVal(a){ return a.asset_type==='livret'?livretVal(a):(a.current_value||0); }
+
+// ══════════════════════════════════════════
+// FISCALITÉ
+// ══════════════════════════════════════════
+function netRate(a){
+  const r=a.rate_manual||0, ps=17.2, tmi=useTMI?11:30, y=yrsOpen(a.opened_at), t=a.asset_type;
+  if(['livret_a','ldds','lep'].includes(t)) return r;
+  if(['csl','livret_bancaire','epargne'].includes(t)) return r*(1-(tmi+ps)/100);
+  if(t==='pea'||t==='pee') return y>=5?r*(1-ps/100):r*(1-(tmi+ps)/100);
+  if(t==='av'||t==='scpi_av') return y>=8?r*(1-ps/100):r*(1-(tmi+ps)/100);
+  if(t==='scpi_direct') return r*(1-(tmi+ps)/100);
+  if(t==='crypto') return r*0.70;
+  return r*(1-(tmi+ps)/100);
+}
+function taxLbl(a){
+  const ps=17.2, tmi=useTMI?11:30, y=yrsOpen(a.opened_at), t=a.asset_type;
+  if(['livret_a','ldds','lep'].includes(t)) return '0% (exonéré)';
+  if(t==='crypto') return '30% flat tax';
+  if((t==='pea'||t==='pee')&&y>=5) return ps+'% PS';
+  if((t==='av'||t==='scpi_av')&&y>=8) return ps+'% PS';
+  return useTMI?`${tmi+ps}% TMI+PS`:'30% flat tax';
+}
+function optDate(a){
+  if(!a.opened_at) return null;
+  const d=new Date(a.opened_at), t=a.asset_type;
+  if(t==='pea'||t==='pee') d.setFullYear(d.getFullYear()+5);
+  else if(t==='av') d.setFullYear(d.getFullYear()+8);
+  else return null;
+  return d>new Date()?d.toLocaleDateString('fr-FR'):null;
+}
+
+// ══════════════════════════════════════════
+// API
+// ══════════════════════════════════════════
+async function api(m,p,b){
+  const r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json','x-access-code':AC},body:b?JSON.stringify(b):undefined});
+  if(r.status===401){logout();throw new Error();}
+  return r.json();
+}
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+async function login(){
+  const c=document.getElementById('codeInput').value.trim(); if(!c)return; AC=c;
+  try{
+    await api('GET','/assets');
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    sessionStorage.setItem('ac',c); await loadAll();
+  }catch{ document.getElementById('loginError').style.display='block'; AC=''; }
+}
+function logout(){ sessionStorage.removeItem('ac'); AC=''; document.getElementById('loginScreen').style.display='flex'; document.getElementById('app').style.display='none'; }
+document.getElementById('codeInput').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+
+async function loadAll(){
+  setST('Synchronisation…');
+  try{
+    const[as,re,st]=await Promise.all([api('GET','/assets'),api('GET','/real-estate'),api('GET','/settings')]);
+    assets=as; realEstate=re; useTMI=st.tmi!=='false';
+    document.getElementById('tmiToggle').checked=useTMI;
+    document.getElementById('tmiLabel').textContent=useTMI?'TMI 11%':'Flat tax 30%';
+    setST('Synchronisé'); render();
+  }catch{setST('Erreur réseau');}
+}
+function setST(t){document.getElementById('syncTxt').textContent=t;}
+function onTmiChange(){useTMI=document.getElementById('tmiToggle').checked;document.getElementById('tmiLabel').textContent=useTMI?'TMI 11%':'Flat tax 30%';saveSetting('tmi',useTMI);render();}
+async function saveSetting(k,v){await api('POST','/settings',{key:k,value:String(v)});}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function showSec(n){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.snav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('section-'+n)?.classList.add('active');
+  document.querySelectorAll('.snav-item').forEach(b=>{if(b.getAttribute('onclick')?.includes("'"+n+"'"))b.classList.add('active');});
+  if(n==='projections')updateProj();
+  if(n==='repartition')updateAlloc();
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function render(){
+  renderMetrics();
+  renderDash();
+  ['pea','av','per','pee','scpi','livret','crypto'].forEach(renderType);
+  renderScpiRevenus();
+  renderRE();
+}
+
+function assetsOfType(type){
+  if(type==='livret') return assets.filter(a=>['livret_a','ldds','csl','livret_bancaire','lep','epargne'].includes(a.asset_type));
+  if(type==='scpi') return assets.filter(a=>a.asset_type==='scpi_direct'||a.asset_type==='scpi_av');
+  return assets.filter(a=>a.asset_type===type);
+}
+
+function renderMetrics(){
+  const all=assets;
+  const tv=all.reduce((s,a)=>s+getVal(a),0);
+  const ti=all.reduce((s,a)=>s+(a.invested||0),0);
+  const gain=tv-ti, gp=ti?(gain/ti*100):0;
+  const tc=all.filter(a=>a.contribution_type!=='employer').reduce((s,a)=>s+(a.monthly_contribution||0),0);
+  const ta=all.filter(a=>a.contribution_type==='employer').reduce((s,a)=>s+(a.monthly_contribution||0),0);
+  const ps=17.2,tmi=useTMI?11:30;
+  const scpiD=assets.filter(a=>a.asset_type==='scpi_direct');
+  const revNet=scpiD.reduce((s,a)=>s+(a.scpi_loyer_brut||0)*(1-(tmi+ps)/100),0)/12;
+  const capA=assets.filter(a=>a.asset_type!=='scpi_direct');
+  const avgNet=capA.length?capA.reduce((s,a)=>s+netRate(a),0)/capA.length:0;
+  const avgBrut=capA.length?capA.reduce((s,a)=>s+(a.rate_manual||0),0)/capA.length:0;
+  document.getElementById('mPat').textContent=fmt(tv);
+  document.getElementById('mGain').textContent=fmt(gain);
+  document.getElementById('mGain').className='mval '+(gain>=0?'pos':'neg');
+  document.getElementById('mGainPct').textContent=fmtP(gp);
+  document.getElementById('mGainPct').className='msub2 '+(gp>=0?'pos':'neg');
+  document.getElementById('mContrib').textContent=fmt(tc)+'/m';
+  document.getElementById('mAbond').textContent=fmt(ta)+'/m';
+  document.getElementById('mRev').textContent=fmt(revNet)+'/m';
+  document.getElementById('mRdtNet').textContent=avgNet.toFixed(2)+'%/an';
+  document.getElementById('mRdtBrut').textContent=avgBrut.toFixed(2)+'% brut';
+}
+
+function renderDash(){
+  const sections=[
+    {id:'pea',label:'PEA',icon:'ti-building-bank'},
+    {id:'av',label:'Assurance-vie',icon:'ti-shield-check'},
+    {id:'per',label:'PER',icon:'ti-hourglass'},
+    {id:'pee',label:'PEE',icon:'ti-briefcase'},
+    {id:'scpi',label:'SCPI',icon:'ti-home-2'},
+    {id:'livret',label:'Livrets & Épargne',icon:'ti-piggy-bank'},
+    {id:'crypto',label:'Crypto',icon:'ti-currency-bitcoin'},
+  ];
+  const el=document.getElementById('dashContent');
+  const blocks=sections.map(s=>{
+    const list=assetsOfType(s.id);
+    if(!list.length) return '';
+    const tv=list.reduce((sum,a)=>sum+getVal(a),0);
+    const ti=list.reduce((sum,a)=>sum+(a.invested||0),0);
+    const gain=tv-ti, gp=ti?(gain/ti*100):0;
+    const color=TYPE_COLORS[s.id]||'#888';
+    return `<div class="summary-card" onclick="showSec('${s.id==='livret'?'livrets':s.id}')" style="cursor:pointer;transition:box-shadow .2s" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.12)'" onmouseout="this.style.boxShadow=''">
+      <div style="width:40px;height:40px;border-radius:10px;background:${color}20;color:${color};display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0"><i class="ti ${s.icon}"></i></div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:600">${s.label}</div><div style="font-size:12px;color:var(--t2);margin-top:2px">${list.length} support${list.length>1?'s':''}</div></div>
+      <div style="text-align:right"><div style="font-size:16px;font-weight:700">${fmt(tv)}</div><div class="asset-gain ${gp>=0?'pos':'neg'}" style="margin-top:3px;display:inline-block">${fmtP(gp)}</div></div>
+    </div>`;
+  }).filter(Boolean);
+  el.innerHTML=blocks.length?blocks.join(''):'<div class="empty-section"><i class="ti ti-chart-pie"></i><p>Aucun actif renseigné.</p><p style="font-size:12px">Utilisez le menu de gauche pour commencer.</p></div>';
+}
+
+function renderType(type){
+  const listId = type==='livret'?'list-livrets':`list-${type}`;
+  const el=document.getElementById(listId);
+  if(!el) return;
+  const list=assetsOfType(type);
+  if(!list.length){
+    el.innerHTML=`<div class="empty-section"><i class="ti ${TYPE_ICONS[type]||'ti-inbox'}"></i><p>Aucun support ${type.toUpperCase()} pour l'instant.</p><button class="btn primary" onclick="openModal('${type}')"><i class="ti ti-plus"></i> Ajouter</button></div>`;
+    return;
+  }
+  // Alertes
+  let alertsHtml='';
+  list.forEach(a=>{
+    const am=a.alert_months||ALERT_MONTHS[type]||0;
+    if(am>0&&daysSince(a.last_price_update||a.updated_at)>am*30)
+      alertsHtml+=`<div class="alert-strip"><i class="ti ti-bell"></i><b>${a.name}</b> — mise à jour recommandée (${am} mois sans MAJ)</div>`;
+    const cv=getVal(a);
+    if((a.livret_ceiling||0)>0&&cv>=a.livret_ceiling*0.95)
+      alertsHtml+=`<div class="ceil-strip"><i class="ti ti-alert-triangle"></i><b>${a.name}</b> — proche du plafond (${fmt(cv)} / ${fmt(a.livret_ceiling)})</div>`;
+  });
+  el.innerHTML=alertsHtml+'<div class="assets-list">'+list.map(a=>assetCard(a,type)).join('')+'</div>';
+}
+
+function assetCard(a, type){
+  const cv=getVal(a), inv=a.invested||0, gain=cv-inv, gp=inv?(gain/inv*100):0;
+  const nr=netRate(a), tl=taxLbl(a), od=optDate(a);
+  const color=TYPE_COLORS[type]||'#888', icon=TYPE_ICONS[type]||'ti-box';
+  const isAuto=a.auto_price;
+  const mc=a.monthly_contribution||0;
+  const contrib=mc>0?(a.contribution_type==='employer'?`<span style="color:var(--green);font-weight:600">+${fmt(mc)}/m abondement</span>`:`${fmt(mc)}/m`):null;
+
+  // Livret bar
+  let lbar='';
+  if((a.livret_ceiling||0)>0){
+    const pct=Math.min(100,cv/(a.livret_ceiling)*100);
+    const c=pct>=100?'full':pct>=90?'near':'';
+    lbar=`<div class="livret-bar"><div class="lb-fill ${c}" style="width:${pct}%"></div></div>`;
+  }
+
+  // Meta info
+  let meta=[];
+  if(a.platform) meta.push(`<span>${a.platform}</span>`);
+  if(a.isin) meta.push(`<span style="font-family:monospace">${a.isin}</span>`);
+  if(a.ticker&&isAuto) meta.push(`<span class="asset-meta-badge" style="background:var(--gbg);color:var(--gtext)">${a.ticker}</span>`);
+  if((a.asset_type==='scpi_direct'||a.asset_type==='scpi_av')&&a.scpi_parts) meta.push(`<span>${a.scpi_parts} parts × ${fmt(a.scpi_part_price)} · TOF ${a.scpi_tof||0}%</span>`);
+  if(od) meta.push(`<span class="optim-badge"><i class="ti ti-clock" style="font-size:10px"></i>Optim. ${od}</span>`);
+  if(a.last_price_update&&isAuto) meta.push(`<span style="color:var(--t3)">Cours du ${new Date(a.last_price_update).toLocaleDateString('fr-FR')}</span>`);
+  if(contrib) meta.push(contrib);
+
+  return `<div class="asset-card">
+    <div class="asset-icon" style="background:${color}18;color:${color}"><i class="ti ${icon}"></i></div>
+    <div class="asset-info">
+      <div class="asset-name">${a.name}</div>
+      <div class="asset-meta">${meta.join('')}</div>
+      ${lbar}
+    </div>
+    <div class="asset-values">
+      <div class="asset-val-group">
+        <div class="asset-val">${fmt(cv)}</div>
+        <div class="asset-val-lbl">Valeur</div>
+      </div>
+      <div class="asset-rdt">
+        <div class="asset-rdt-brut">${(a.rate_manual||0).toFixed(1)}%</div>
+        <div class="asset-rdt-net">${nr.toFixed(2)}% net</div>
+        <div style="font-size:10px;color:var(--t3)">${tl}</div>
+      </div>
+      <div class="asset-gain ${gp>=0?'pos':'neg'}">${fmtP(gp)}</div>
+    </div>
+    <div class="asset-actions">
+      <button class="btn sm ghost" onclick="openEditModal(${a.id})"><i class="ti ti-edit"></i></button>
+      <button class="btn sm ghost danger" onclick="delAsset(${a.id})"><i class="ti ti-trash"></i></button>
+    </div>
+  </div>`;
+}
+
+function renderScpiRevenus(){
+  const sd=assets.filter(a=>a.asset_type==='scpi_direct');
+  const el=document.getElementById('revenusScpi');
+  if(!el) return;
+  if(!sd.length){el.style.display='none';return;}
+  el.style.display='block';
+  const ps=17.2,tmi=useTMI?11:30;
+  const tb=sd.reduce((s,a)=>s+(a.scpi_loyer_brut||0),0);
+  const tn=sd.reduce((s,a)=>s+(a.scpi_loyer_brut||0)*(1-(tmi+ps)/100),0);
+  el.innerHTML=`<div style="font-size:14px;font-weight:700;margin-bottom:.875rem;display:flex;align-items:center;gap:6px"><i class="ti ti-home-dollar" style="font-size:16px;color:var(--t2)"></i>Revenus fonciers</div>
+  <div class="rev-grid">
+    <div class="rev-card"><div class="rev-lbl">Loyers bruts / an</div><div class="rev-val pos">${fmt(tb)}</div><div class="rev-sub">${fmt(tb/12)} / mois</div></div>
+    <div class="rev-card"><div class="rev-lbl">Loyers nets / an</div><div class="rev-val pos">${fmt(tn)}</div><div class="rev-sub">${fmt(tn/12)} / mois</div></div>
+    <div class="rev-card"><div class="rev-lbl">Impôts / an</div><div class="rev-val neg">${fmt(tb-tn)}</div><div class="rev-sub">${useTMI?'TMI 11% + PS 17.2%':'Flat tax 30%'}</div></div>
+  </div>
+  <div class="assets-list">${sd.map(a=>assetCard(a,'scpi')).join('')}</div>`;
+}
+
+function renderRE(){
+  const el=document.getElementById('list-locatif');
+  if(!realEstate.length){el.innerHTML='<div class="empty-section"><i class="ti ti-home-off"></i><p>Aucun projet locatif.</p><button class="btn primary" onclick="openReModal()"><i class="ti ti-plus"></i> Nouveau scénario</button></div>';return;}
+  el.innerHTML=realEstate.map(re=>{
+    const tc=(re.purchase_price||0)+(re.notary_fees||0)+(re.works_cost||0)+(re.furniture_cost||0);
+    const ra=(re.monthly_rent||0)*12, ea=ra*(1-(re.vacancy_rate||0)/100);
+    const rb=tc?ea/tc*100:0;
+    const ac=(re.owner_charges||0)*12+(re.property_tax||0)+(re.insurance||0)+(ea*(re.management_fees_pct||0)/100);
+    const rn=tc?(ea-ac)/tc*100:0;
+    let ms=0;
+    if(re.loan_amount>0&&re.loan_rate>0){const r=re.loan_rate/100/12,n=re.loan_years*12;ms=re.loan_amount*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
+    const cf=(re.monthly_rent||0)-(re.owner_charges||0)-(ac/12)-ms;
+    const sc=re.status==='active'?'background:var(--gbg);color:var(--gtext)':'background:var(--ambg);color:var(--amber)';
+    return `<div class="re-card">
+      <div class="re-hdr">
+        <div><div class="re-name">${re.name}</div><span class="re-status" style="${sc}">${re.status==='active'?'Actif':'En réflexion'}</span></div>
+        <div style="display:flex;gap:5px">
+          <button class="btn sm" onclick="openReModal(${re.id})"><i class="ti ti-edit"></i></button>
+          <button class="btn sm danger ghost" onclick="delRe(${re.id})"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div class="re-kpis">
+        <div class="re-kpi"><div class="re-kpi-lbl">Coût total</div><div class="re-kpi-val">${fmt(tc)}</div></div>
+        <div class="re-kpi"><div class="re-kpi-lbl">Rendement brut</div><div class="re-kpi-val ${rb>0?'pos':''}">${rb.toFixed(2)}%</div></div>
+        <div class="re-kpi"><div class="re-kpi-lbl">Rendement net</div><div class="re-kpi-val ${rn>0?'pos':''}">${rn.toFixed(2)}%</div></div>
+        <div class="re-kpi"><div class="re-kpi-lbl">Cash-flow / mois</div><div class="re-kpi-val ${cf>=0?'pos':'neg'}">${fmt(cf)}</div></div>
+        <div class="re-kpi"><div class="re-kpi-lbl">Loyer mensuel</div><div class="re-kpi-val">${fmt(re.monthly_rent)}/m</div></div>
+        <div class="re-kpi"><div class="re-kpi-lbl">Mensualité crédit</div><div class="re-kpi-val">${fmt(ms)}/m</div></div>
+        <div class="re-kpi"><div class="re-kpi-lbl">Loyer effectif</div><div class="re-kpi-val">${fmt(ea/12)}/m</div></div>
+        <div class="re-kpi"><div class="re-kpi-lbl">Charges / an</div><div class="re-kpi-val neg">${fmt(ac)}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// FORMULAIRE INTELLIGENT
+// ══════════════════════════════════════════
+const ALL_CF = ['cf-opened','cf-livret-sub','cf-ticker','cf-scpi-fields','cf-val-auto','cf-val-manual','cf-val-livret','cf-rate','cf-abond'];
+
+function hideCfs(){ ALL_CF.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('on');}); }
+function showCf(...ids){ ids.forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('on');}); }
+
+function configForm(type){
+  hideCfs();
+  if(type==='pea'){ showCf('cf-opened','cf-ticker','cf-val-manual'); }
+  else if(type==='av'){ showCf('cf-opened','cf-ticker','cf-val-manual','cf-rate'); }
+  else if(type==='per'){ showCf('cf-opened','cf-val-manual','cf-rate'); }
+  else if(type==='pee'){ showCf('cf-opened','cf-val-manual','cf-rate','cf-abond'); }
+  else if(type==='scpi'){ showCf('cf-scpi-fields','cf-val-auto','cf-rate'); }
+  else if(type==='livret'){ showCf('cf-livret-sub','cf-val-livret'); onLivretChange(); }
+  else if(type==='crypto'){ showCf('cf-ticker','cf-val-auto'); }
+}
+
+function onLivretChange(){
+  const t=document.getElementById('aLivretType').value;
+  document.getElementById('aRate').value=LIVRET_RATES[t]||0;
+}
+function calcAutoVal(){
+  const units=parseFloat(document.getElementById('aUnits').value)||0;
+  const price=parseFloat(document.getElementById('aUnitPrice').value)||0;
+  if(units&&price) document.getElementById('aValAuto').value=Math.round(units*price*100)/100;
+}
+function calcScpiVal(){
+  const parts=parseFloat(document.getElementById('aScpiParts').value)||0;
+  const price=parseFloat(document.getElementById('aScpiPrice').value)||0;
+  document.getElementById('aValAuto').value=Math.round(parts*price*100)/100;
+}
+
+function openModal(type){
+  curModalType=type; editAssetId=null;
+  document.getElementById('assetModalTitle').textContent='Ajouter — '+typeLabel(type);
+  clearAssetForm();
+  configForm(type);
+  showSec(type==='livret'?'livrets':type); // naviguer vers la bonne section
+  openOv('ovAsset');
+}
+
+function openEditModal(id){
+  const a=assets.find(x=>x.id===id); if(!a) return;
+  editAssetId=id;
+  // Déterminer le type de section
+  const t=assetSectionType(a);
+  curModalType=t;
+  document.getElementById('assetModalTitle').textContent='Modifier — '+a.name;
+  // Remplir le formulaire
+  document.getElementById('aN').value=a.name||'';
+  document.getElementById('aPlatform').value=a.platform||'';
+  document.getElementById('aOpened').value=a.opened_at||'';
+  document.getElementById('aTicker').value=a.ticker||'';
+  document.getElementById('aUnits').value=a.units||'';
+  document.getElementById('aUnitPrice').value=a.unit_price||'';
+  document.getElementById('aInvested').value=a.invested||'';
+  document.getElementById('aValue').value=a.current_value||'';
+  document.getElementById('aSolde').value=a.current_value||'';
+  document.getElementById('aRate').value=a.rate_manual||'';
+  document.getElementById('aContrib').value=a.contribution_type!=='employer'?(a.monthly_contribution||0):0;
+  document.getElementById('aAbond').value=a.contribution_type==='employer'?(a.monthly_contribution||0):0;
+  document.getElementById('aScpiParts').value=a.scpi_parts||'';
+  document.getElementById('aScpiPrice').value=a.scpi_part_price||'';
+  document.getElementById('aScpiTof').value=a.scpi_tof||95;
+  document.getElementById('aScpiLoyer').value=a.scpi_loyer_brut||'';
+  document.getElementById('aScpiMode').value=a.asset_type==='scpi_av'?'av':'direct';
+  document.getElementById('aValAuto').value=a.current_value||'';
+  if(ALL_CF.includes('cf-livret-sub')&&LIVRET_LBL[a.asset_type]) document.getElementById('aLivretType').value=a.asset_type;
+  configForm(t);
+  openOv('ovAsset');
+}
+
+function assetSectionType(a){
+  const t=a.asset_type;
+  if(['livret_a','ldds','csl','livret_bancaire','lep','epargne'].includes(t)) return 'livret';
+  if(t==='scpi_direct'||t==='scpi_av') return 'scpi';
+  return t;
+}
+
+function typeLabel(t){
+  const m={pea:'PEA',av:'Assurance-vie',per:'PER',pee:'PEE',scpi:'SCPI',livret:'Livret',crypto:'Crypto'};
+  return m[t]||t;
+}
+
+function clearAssetForm(){
+  ['aN','aPlatform','aOpened','aTicker','aUnits','aUnitPrice','aInvested','aValue','aSolde','aRate','aContrib','aAbond','aScpiParts','aScpiPrice','aScpiLoyer','aValAuto'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('aScpiTof').value=95;
+  document.getElementById('aScpiMode').value='direct';
+}
+
+async function saveAsset(){
+  const name=document.getElementById('aN').value.trim(); if(!name){toast('Nom requis','err');return;}
+  const t=curModalType;
+  let asset_type=t, auto_price=false, ticker='', units=0, unit_price=0, isin='';
+  let invested=0, current_value=0, rate_manual=0;
+  let scpi_parts=0, scpi_part_price=0, scpi_tof=95, scpi_loyer_brut=0;
+  let livret_ceiling=0, livret_deposit_date='';
+
+  if(t==='pea'){
+    asset_type='pea'; auto_price=true;
+    ticker=document.getElementById('aTicker').value.trim();
+    units=parseFloat(document.getElementById('aUnits').value)||0;
+    unit_price=parseFloat(document.getElementById('aUnitPrice').value)||0;
+    invested=parseFloat(document.getElementById('aInvested').value)||0;
+    current_value=parseFloat(document.getElementById('aValue').value)||units*unit_price||invested;
+  } else if(t==='av'){
+    asset_type='av'; auto_price=!!document.getElementById('aTicker').value.trim();
+    ticker=document.getElementById('aTicker').value.trim();
+    units=parseFloat(document.getElementById('aUnits').value)||0;
+    unit_price=parseFloat(document.getElementById('aUnitPrice').value)||0;
+    rate_manual=parseFloat(document.getElementById('aRate').value)||0;
+    invested=parseFloat(document.getElementById('aInvested').value)||0;
+    current_value=parseFloat(document.getElementById('aValue').value)||units*unit_price||invested;
+  } else if(t==='per'){
+    asset_type='per'; rate_manual=parseFloat(document.getElementById('aRate').value)||0;
+    invested=parseFloat(document.getElementById('aInvested').value)||0;
+    current_value=parseFloat(document.getElementById('aValue').value)||invested;
+  } else if(t==='pee'){
+    asset_type='pee'; rate_manual=parseFloat(document.getElementById('aRate').value)||0;
+    invested=parseFloat(document.getElementById('aInvested').value)||0;
+    current_value=parseFloat(document.getElementById('aValue').value)||invested;
+  } else if(t==='scpi'){
+    const mode=document.getElementById('aScpiMode').value;
+    asset_type=mode==='av'?'scpi_av':'scpi_direct';
+    scpi_parts=parseInt(document.getElementById('aScpiParts').value)||0;
+    scpi_part_price=parseFloat(document.getElementById('aScpiPrice').value)||0;
+    scpi_tof=parseFloat(document.getElementById('aScpiTof').value)||95;
+    scpi_loyer_brut=parseFloat(document.getElementById('aScpiLoyer').value)||0;
+    current_value=scpi_parts*scpi_part_price; invested=current_value;
+    rate_manual=parseFloat(document.getElementById('aRate').value)||0;
+  } else if(t==='livret'){
+    const lt=document.getElementById('aLivretType').value;
+    asset_type=lt; rate_manual=LIVRET_RATES[lt]||parseFloat(document.getElementById('aRate').value)||0;
+    current_value=parseFloat(document.getElementById('aSolde').value)||0; invested=current_value;
+    livret_ceiling=LIVRET_CEIL[lt]||0; livret_deposit_date=new Date().toISOString().split('T')[0];
+  } else if(t==='crypto'){
+    asset_type='crypto'; auto_price=true;
+    ticker=document.getElementById('aTicker').value.trim().toLowerCase();
+    units=parseFloat(document.getElementById('aUnits').value)||0;
+    unit_price=parseFloat(document.getElementById('aUnitPrice').value)||0;
+    current_value=units*unit_price; invested=parseFloat(document.getElementById('aInvested').value)||current_value;
+  }
+
+  const contrib=parseFloat(document.getElementById('aContrib').value)||0;
+  const abond=parseFloat(document.getElementById('aAbond').value)||0;
+  const opened_at=document.getElementById('aOpened').value||'';
+  const platform=document.getElementById('aPlatform').value.trim();
+
+  const body={
+    name, asset_type, auto_price, ticker, units, unit_price, isin,
+    invested, current_value, rate_manual, opened_at, platform,
+    monthly_contribution:abond>0?abond:contrib,
+    contribution_type:abond>0?'employer':'personal',
+    alert_months:ALERT_MONTHS[t]||0,
+    scpi_parts, scpi_part_price, scpi_tof, scpi_loyer_brut,
+    livret_ceiling, livret_deposit_date
+  };
+
+  if(editAssetId) await api('PUT','/assets/'+editAssetId,body);
+  else await api('POST','/assets',body);
+  closeOv('ovAsset'); await loadAll();
+  toast(editAssetId?'Support mis à jour':'Support ajouté !');
+}
+
+async function delAsset(id){
+  if(!confirm('Supprimer ce support ?')) return;
+  await api('DELETE','/assets/'+id); await loadAll();
+}
+
+// ══════════════════════════════════════════
+// PROJECTIONS
+// ══════════════════════════════════════════
+function updateProj(){
+  const years=parseInt(document.getElementById('horizonSlider').value);
+  document.getElementById('horizonVal').textContent=years+' an'+(years>1?'s':'');
+  const cap=assets.filter(a=>a.asset_type!=='scpi_direct');
+  const tv=cap.reduce((s,a)=>s+getVal(a),0);
+  const tc=cap.reduce((s,a)=>s+(a.monthly_contribution||0),0);
+  const avgB=cap.length?cap.reduce((s,a)=>s+(a.rate_manual||0),0)/cap.length:3;
+  const avgN=cap.length?cap.reduce((s,a)=>s+netRate(a),0)/cap.length:2;
+  const ps=17.2,tmi=useTMI?11:30;
+  const sdNet=assets.filter(a=>a.asset_type==='scpi_direct').reduce((s,a)=>s+(a.scpi_loyer_brut||0)*(1-(tmi+ps)/100),0);
+  function cmp(v,r,y,m){const rm=r/100/12;let x=v;for(let i=0;i<y*12;i++)x=x*(1+rm)+m;return Math.round(x);}
+  const hs=[1,5,10,20].filter(h=>h<=years); if(!hs.includes(years))hs.push(years); hs.sort((a,b)=>a-b);
+  document.getElementById('hCards').innerHTML=hs.slice(0,4).map(y=>{
+    const vB=cmp(tv,avgB,y,tc)+Math.round(sdNet*y),vN=cmp(tv,avgN,y,tc)+Math.round(sdNet*y),g=vN-tv-(tc*12*y);
+    return `<div class="hcard"><div class="hy">${y} an${y>1?'s':''}</div><div class="hv">${fmt(vN)}</div><div class="hg ${g>=0?'pos':'neg'}">${g>=0?'+':''}${fmt(g)}</div><div class="hb">${fmt(vB)} brut</div></div>`;
+  }).join('');
+  const lbs=[],dB=[],dN=[],dC=[],cy=new Date().getFullYear();
+  for(let y=0;y<=years;y++){lbs.push(y===0?'Auj.':(cy+y)+'');dB.push(cmp(tv,avgB,y,tc)+Math.round(sdNet*y));dN.push(cmp(tv,avgN,y,tc)+Math.round(sdNet*y));dC.push(Math.round(tv+tc*12*y));}
+  document.getElementById('projLegend').innerHTML='<span><i style="background:#2563eb"></i>Brut</span><span><i style="background:#16a34a"></i>Net après impôts</span><span><i style="background:#d1d5db"></i>Versements</span>';
+  if(projChart)projChart.destroy();
+  projChart=new Chart(document.getElementById('projChart'),{type:'line',data:{labels:lbs,datasets:[
+    {label:'Brut',data:dB,borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.07)',fill:true,tension:.4,pointRadius:2,borderDash:[4,3]},
+    {label:'Net',data:dN,borderColor:'#16a34a',backgroundColor:'rgba(22,163,74,.08)',fill:true,tension:.4,pointRadius:2},
+    {label:'Versements',data:dC,borderColor:'#d1d5db',fill:false,tension:.4,borderDash:[6,4],pointRadius:0}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:i=>i.dataset.label+' : '+fmt(i.raw)}}},scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}}});
+}
+
+// ══════════════════════════════════════════
+// ALLOCATION
+// ══════════════════════════════════════════
+function updateAlloc(){
+  const bT={};
+  const typeOf=a=>{
+    const t=a.asset_type;
+    if(['livret_a','ldds','csl','livret_bancaire','lep','epargne'].includes(t)) return 'Livrets';
+    if(t==='scpi_direct'||t==='scpi_av') return 'SCPI';
+    if(t==='pea') return 'PEA';
+    if(t==='av') return 'AV';
+    if(t==='per') return 'PER';
+    if(t==='pee') return 'PEE';
+    if(t==='crypto') return 'Crypto';
+    return 'Autre';
+  };
+  assets.forEach(a=>{const k=typeOf(a),v=getVal(a);if(v>0)bT[k]=(bT[k]||0)+v;});
+  const typeColors={'PEA':'#2563eb','AV':'#16a34a','PER':'#7c3aed','PEE':'#ea580c','SCPI':'#ca8a04','Livrets':'#0891b2','Crypto':'#db2777','Autre':'#6b7280'};
+  const types=Object.keys(bT),vals=types.map(t=>bT[t]),tot=vals.reduce((s,v)=>s+v,0);
+  const cols=types.map(t=>typeColors[t]||'#888');
+  document.getElementById('allocList').innerHTML=types.map((t,i)=>`<div class="alloc-row"><div class="alloc-dot" style="background:${cols[i]}"></div><div class="alloc-name">${t}</div><div class="alloc-pct">${((vals[i]/tot)*100).toFixed(1)}%</div><div class="alloc-val">${fmt(vals[i])}</div></div>`).join('');
+  if(allocChart)allocChart.destroy();
+  allocChart=new Chart(document.getElementById('allocChart'),{type:'doughnut',data:{labels:types,datasets:[{data:vals,backgroundColor:cols,borderWidth:3,borderColor:'#fff',hoverBorderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false},tooltip:{callbacks:{label:i=>i.label+' : '+fmt(i.raw)+' ('+((i.raw/tot)*100).toFixed(1)+'%)'}}}}});
+}
+
+// ══════════════════════════════════════════
+// PRIX AUTO
+// ══════════════════════════════════════════
+async function refreshPrices(){
+  setST('Actualisation…');
+  try{ const r=await api('POST','/refresh-prices'); toast(`${r.count} cours mis à jour ✓`); await loadAll(); }
+  catch{ toast('Erreur actualisation','err'); }
+}
+
+// ══════════════════════════════════════════
+// REAL ESTATE
+// ══════════════════════════════════════════
+let editReId=null;
+function openReModal(id=null){
+  editReId=id; const re=id?realEstate.find(x=>x.id===id):null;
+  document.getElementById('reMTitle').textContent=id?'Modifier le scénario':'Nouveau scénario locatif';
+  const fm={reName:'name',reStatus:'status',rePurchase:'purchase_price',reNotary:'notary_fees',reWorks:'works_cost',reFurniture:'furniture_cost',reVacancy:'vacancy_rate',reLoan:'loan_amount',reLoanRate:'loan_rate',reLoanYears:'loan_years',reRent:'monthly_rent',reTenantC:'tenant_charges',reOwnerC:'owner_charges',reTax:'property_tax',reInsurance:'insurance',reGestion:'management_fees_pct'};
+  Object.entries(fm).forEach(([el,k])=>{document.getElementById(el).value=re?re[k]??'':el==='reVacancy'?5:el==='reStatus'?'draft':''});
+  openOv('ovRe');
+}
+async function saveRe(){
+  const b={name:document.getElementById('reName').value.trim(),status:document.getElementById('reStatus').value,purchase_price:+document.getElementById('rePurchase').value||0,notary_fees:+document.getElementById('reNotary').value||0,works_cost:+document.getElementById('reWorks').value||0,furniture_cost:+document.getElementById('reFurniture').value||0,monthly_rent:+document.getElementById('reRent').value||0,tenant_charges:+document.getElementById('reTenantC').value||0,owner_charges:+document.getElementById('reOwnerC').value||0,property_tax:+document.getElementById('reTax').value||0,insurance:+document.getElementById('reInsurance').value||0,management_fees_pct:+document.getElementById('reGestion').value||0,vacancy_rate:+document.getElementById('reVacancy').value||5,loan_amount:+document.getElementById('reLoan').value||0,loan_rate:+document.getElementById('reLoanRate').value||0,loan_years:+document.getElementById('reLoanYears').value||20};
+  if(!b.name)return;
+  editReId?await api('PUT','/real-estate/'+editReId,b):await api('POST','/real-estate',b);
+  closeOv('ovRe'); await loadAll();
+}
+async function delRe(id){if(!confirm('Supprimer ?'))return;await api('DELETE','/real-estate/'+id);await loadAll();}
+
+// ══════════════════════════════════════════
+// HELPERS UI
+// ══════════════════════════════════════════
+function openOv(id){document.getElementById(id).classList.add('open');}
+function closeOv(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+function exportData(){window.location.href='/api/export?code='+AC;}
+function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.style.background=type==='err'?'var(--red)':'var(--text)';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+// ── BOOT ──
+const sv=sessionStorage.getItem('ac');
+if(sv){AC=sv;api('GET','/assets').then(()=>{document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';loadAll();}).catch(()=>sessionStorage.removeItem('ac'));}
+setInterval(loadAll,30000);
+</script>
+</body>
+</html>
