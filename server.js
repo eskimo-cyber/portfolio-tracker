@@ -11,7 +11,15 @@ if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 const DB_PATH = path.join(dataDir, 'portfolio.json');
 
 function readDB() {
-  try { return JSON.parse(fs.readFileSync(DB_PATH, 'utf8')); }
+  try {
+    const data = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    return {
+      assets: data.assets || data.lines || [],
+      realEstate: data.realEstate || [],
+      settings: data.settings || {},
+      nextId: data.nextId || 1
+    };
+  }
   catch { return { assets: [], realEstate: [], settings: {}, nextId: 1 }; }
 }
 function writeDB(db) { fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2)); }
