@@ -41,6 +41,13 @@ app.get('/api/debug', (req, res) => {
   catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+app.delete('/api/debug/asset/:id', (req, res) => {
+  const db = readDB();
+  db.assets = db.assets.filter(a => a.id !== +req.params.id);
+  writeDB(db);
+  res.json({ ok: true, remaining: db.assets.length });
+});
+
 // Assets (supports)
 app.get('/api/assets', auth, (req, res) => res.json(readDB().assets || []));
 
