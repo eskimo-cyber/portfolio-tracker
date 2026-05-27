@@ -35,6 +35,12 @@ function auth(req, res, next) {
   next();
 }
 
+// Debug
+app.get('/api/debug', (req, res) => {
+  try { res.json(JSON.parse(fs.readFileSync(DB_PATH, 'utf8'))); }
+  catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Assets (supports)
 app.get('/api/assets', auth, (req, res) => res.json(readDB().assets || []));
 
